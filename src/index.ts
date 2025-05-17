@@ -1,8 +1,8 @@
 import { execSync } from "child_process";
-import * as fs from "fs";
 import * as path from "path";
 import * as dotenv from "dotenv";
 import OpenAI from "openai";
+import { v4 as uuidv4 } from "uuid";
 
 dotenv.config();
 
@@ -18,9 +18,14 @@ async function downloadAudio(url: string) {
   execSync(`yt-dlp -x --audio-format mp3 -o './audio/audio.%(ext)s' ${url}`);
 }
 
-async function transcribeAudio(): Promise<string> {
-  console.log("Transcribing...");
-  const result = execSync(`python3 src/whisperTranscribe.py ${AUDIO_FILE}`);
+async function splitAudio(requestId: string) {
+  console.log("Splitting audio...");
+  execSync(`python3 src/splitAudio.py ${AUDIO_FILE} ${requestId}`);
+}
+
+async function transcribeAudio(requestId: string): Promise<string> {
+  console.log("Transcribing chunks...");
+  const result = execSync(`python3 src/whisperTranscribe.py ${requestId}`);
   return result.toString();
 }
 
@@ -51,9 +56,12 @@ async function generateCheatSheet(transcript: string) {
     process.exit(1);
   }
 
+  const requestId = uuidv4();
+
   try {
     await downloadAudio(VIDEO_URL);
-    const transcript = await transcribeAudio();
+    await splitAudio(requestId);
+    const transcript = await transcribeAudio(requestId);
     await generateCheatSheet(transcript);
   } catch (err) {
     console.error("Error:", err);

@@ -17,3 +17,9 @@
 # Run the tool
 
     npx ts-node src/index.ts "https://www.youtube.com/watch?v=qU3fmidNbJE"
+
+# Extras
+
+## Process video in chunks
+
+pip install pydub
