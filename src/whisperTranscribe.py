@@ -2,7 +2,6 @@
 import whisper
 import os
 import sys
-from concurrent.futures import ThreadPoolExecutor
 
 request_id = sys.argv[1]
 chunk_dir = f"audio_chunks/{request_id}"
@@ -18,10 +17,11 @@ def main():
     files = sorted(f for f in os.listdir(chunk_dir) if f.endswith(".mp3"))
     transcript_chunks = []
 
-    with ThreadPoolExecutor(max_workers=4) as executor:
-        results = executor.map(transcribe_chunk, files)
+    for filename in files:
+        text = transcribe_chunk(filename)
+        transcript_chunks.append(text)
 
-    transcript = "\n".join(results)
+    transcript = "\n".join(transcript_chunks)
 
     # Save transcript to file
     output_file = f"transcripts/{request_id}.txt"
