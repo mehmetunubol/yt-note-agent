@@ -12,7 +12,7 @@ audio = AudioSegment.from_file(file_path)
 duration_ms = len(audio)
 total_chunks = math.ceil(duration_ms / chunk_length_ms)
 
-output_dir = f"audio_chunks/{request_id}"
+output_dir = f"audio/{request_id}"
 os.makedirs(output_dir, exist_ok=True)
 
 for i in range(total_chunks):

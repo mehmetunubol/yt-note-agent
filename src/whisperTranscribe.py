@@ -4,7 +4,7 @@ import os
 import sys
 
 request_id = sys.argv[1]
-chunk_dir = f"audio_chunks/{request_id}"
+chunk_dir = f"audio/{request_id}"
 model = whisper.load_model("base")
 
 def transcribe_chunk(filename):
@@ -14,7 +14,10 @@ def transcribe_chunk(filename):
     return result["text"]
 
 def main():
-    files = sorted(f for f in os.listdir(chunk_dir) if f.endswith(".mp3"))
+    files = sorted(f for f in os.listdir(chunk_dir) if f.endswith(".mp3") and f.startswith("chunk"))
+    if not files:
+        print("No audio chunks found.")
+        return
     transcript_chunks = []
 
     for filename in files:

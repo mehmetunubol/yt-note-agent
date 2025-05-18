@@ -5,4 +5,4 @@ npm-debug.log
 package-lock.json
 node_modules
 audio
-audio_chunks
+transcripts

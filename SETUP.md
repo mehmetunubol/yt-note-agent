@@ -23,3 +23,12 @@
 ## Process video in chunks
 
 pip install pydub
+
+## missing tsconfig.json
+
+rm -rf tsconfig.json
+npx tsc --init
+
+curl -X POST http://localhost:3000/process-video \
+ -H "Content-Type: application/json" \
+ -d '{"videoUrl": "https://www.youtube.com/watch?v=qU3fmidNbJE"}'
